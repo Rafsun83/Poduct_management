@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+
+
+/* modal css */
+.modal {
+  @apply z-50 fixed left-0 top-0 p-8 w-screen h-screen overflow-auto bg-black bg-opacity-50;
+}
+
+.modal.modal-visible {
+  @apply flex flex-col;
+}
+
+.modal.modal-hidden {
+  @apply hidden;
+}
+
+.modal-content {
+  @apply m-auto relative outline-none bg-white rounded;
+
+  min-width: 600px;
+  width: auto;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.modal-content .modal-header {
+  @apply flex items-center justify-between border-b border-light-gray p-2;
+}
+
+.modal-content .modal-header.left {
+  @apply flex-row-reverse justify-between text-right;
+}
+
+.modal-content .modal-header .modal-close {
+  @apply flex items-center justify-center bg-gray text-white leading-none p-1 rounded-sm cursor-pointer transition duration-300 ease-in;
+}
+
+.modal-content .modal-header .modal-close:hover {
+  @apply bg-gray-400;
+}
+
+.modal-content .modal-header .modal-header-content {
+  @apply flex-1;
+}
+
+.modal-content .modal-body {
+  @apply p-2;
+}
+
+.modal-content .modal-footer {
+  @apply flex items-center border-t border-light-gray p-2;
+}
+
+.modal-animate-fade {
+  animation: modal-fade 1s;
+}
+
+@keyframes modal-fade {
+  from {
+    @apply opacity-0;
+  }
+  to {
+    @apply opacity-100;
+  }
+}
+
+.modal-animate-top {
+  @apply relative;
+
+  animation: modal-top 0.3s;
+}
+@keyframes modal-top {
+  from {
+    top: -20vh;
+
+    @apply opacity-0;
+  }
+  to {
+    @apply top-0 opacity-100;
+  }
+}
+
+.modal-animate-bottom {
+  @apply relative;
+
+  animation: modal-bottom 0.3s;
+}
+@keyframes modal-bottom {
+  from {
+    bottom: -20vh;
+
+    @apply opacity-0;
+  }
+  to {
+    @apply bottom-0 opacity-100;
+  }
+}
+
+.modal-animate-zoom {
+  animation: modal-zoom 0.3s;
+}
+
+@keyframes modal-zoom {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* dropDown */
+.dropDown{
+  opacity: 1;
+  z-index: 1;
+  position: absolute;
+  /* top: 13px;
+  right: 13px; */
+  /* width: 8rem; */
+  border-radius: 5px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  
+}
+.buttonclass {
+  border: 1px solid green;
+  padding: 5px;
+  border-radius: 5px;
+  background: yellowgreen;
+}
+
+.buttonclass:hover{
+  background-color: yellow;
+}
