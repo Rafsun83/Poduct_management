@@ -6,12 +6,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AllProductsList from "./Feature/AllProducts/AllProductsList";
 import About from "./Feature/About/About";
 import Contact from "./Feature/Contact/Contact";
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "./store/store";
 
 function App() {
   
   return (
     <div className="App">
-      <BrowserRouter>
+       <ReduxProvider store={store} >
+       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navbar/>}>
             <Route path="/admin" element={<Home/>} />
@@ -21,6 +24,8 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+       </ReduxProvider>
+   
     </div>
   );
 }

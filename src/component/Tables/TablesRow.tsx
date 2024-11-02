@@ -1,5 +1,6 @@
 import React from "react";
 import { Product } from "../../DB/db";
+// import CustomDropdown from "../../Feature/Dropdown/CustomDropdown";
 
 interface Props {
   allProducts?: any;
@@ -12,7 +13,7 @@ export default function TablesRow({
   handleDeleteProduct = (id: string) => {},
   handleUpdateProduct = (id: string) => {},
 }: Props) {
-  const TABLE_HEAD = ["Image", "Title", "Description", "Price", ""];
+  const TABLE_HEAD = ["Image", "Title", "Description", "Price", "Actions"];
 
   return (
     <div>
@@ -38,7 +39,7 @@ export default function TablesRow({
             ) => (
               <tr key={name} className={" border border-light-gray"}>
                 {/* index % 2 === 0 ? "bg-gray-400" :  */}
-                <td className="p-4">
+                <td className="p-2">
                   <div className="flex items-center">
                     <img
                       src={image || ""}
@@ -47,29 +48,32 @@ export default function TablesRow({
                     />
                   </div>
                 </td>
-                <td className="p-4">
+                <td className="p-2">
                   <p className="font-medium">{name}</p>
                 </td>
-                <td className="p-4">
+                <td className="p-2">
                   <p className="text-sm text-gray-500">{description}</p>
                 </td>
 
-                <td className="p-4">
+                <td className="p-2">
                   <p className="text-sm text-gray-500">{price}</p>
                 </td>
-                <td className="p-4 flex gap-3 items-center justify-center">
+                <td className="p-2">
+                  <div className="flex gap-3 items-center justify-center">
                   <button
-                    className="text-white bg-deepGreen px-2  rounded "
+                    className="text-white bg-deepGreen px-2  rounded text-[14px] "
                     onClick={() => handleUpdateProduct(id)}
                   >
                     Update
                   </button>
                   <button
-                    className="text-white bg-red  px-2  rounded"
+                    className="text-white bg-red  px-2  rounded text-[14px]"
                     onClick={() => handleDeleteProduct(id)}
                   >
                     Delete
                   </button>
+                  {/* <CustomDropdown/> */}
+                  </div>
                 </td>
               </tr>
             )

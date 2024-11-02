@@ -1,31 +1,37 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import SearchIcon from "../../Asstets/Icons/SearchIcon";
 import TablesRow from "./TablesRow";
 import CustomModal from "../../Feature/Modal/CustomModal";
 import AddProductForm from "../CommonComponent/CustomForm";
-import { addData } from "../../DB/Actions/addProducts";
-import { Product, Stores } from "../../DB/db";
+import { Product } from "../../DB/db";
 import { v4 as uuidv4 } from "uuid";
-import { getStoreData } from "../../DB/Actions/retriveProducts";
-import { deleteProduct } from "../../DB/Actions/deleteProduct";
-import { getDataById } from "../../DB/Actions/retriveSignleProduct";
-import { updateExistingProduct } from "../../DB/Actions/updateProducts";
 import { Link } from "react-router-dom";
+import {
+  addProduct,
+  deleteProducts,
+  updateProducts,
+} from "../../store/slices/ProductSlice";
+import { useDispatch, useSelector } from "react-redux";
+import ProductImage from "../../Asstets/Icons/Image.png";
+import DashboardIcon from "../../Asstets/Icons/Dashboard";
+import CartIcon from "../../Asstets/Icons/CartIcon";
+import UpdateIcon from "../../Asstets/Icons/UpdateIcon";
+import ArrowLeft from "../../Asstets/Icons/ArrowLeft";
+import ArrowRight from "../../Asstets/Icons/ArrowRight";
+import PlusIcon from "../../Asstets/Icons/PlusIcon";
+import Chart from "../CommonComponent/Chart";
+import DahsobardChart from "../CommonComponent/Chart";
 
-const TABS = [
-  { label: "All", value: "all" },
-];
+const TABS = [{ label: "All", value: "all" }];
 
 function ProductsTable() {
   const uid = uuidv4();
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [isProductAdded, setIsProductAdded] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState("all");
   const [search, setSearch] = useState("");
-  const [selectedId, setSelecedId] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
-  const [product, setProduct] = useState({
+  const [product, setProduct] = useState<Product>({
     id: uid,
     image: "",
     name: "",
@@ -41,20 +47,31 @@ function ProductsTable() {
     price: "",
   });
 
+  const allProducts: any = useSelector<{ product: Product }>(
+    (state) => state.product
+  );
+
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearch(e.target.value);
-      const filterRegex = new RegExp(e.target.value, "i");
-      const resultOptions = allProducts.filter((option) =>
-        option.name.match(filterRegex)
-      );
-      setAllProducts(resultOptions);
+      // const filterRegex = new RegExp(e.target.value, "i");
+      // const resultOptions = allProducts.filter((option) =>
+      //   option.name.match(filterRegex)
+      // );
+      // setAllProducts(resultOptions);
     },
-    [allProducts]
+    []
   );
 
   const openModalhandaler = () => {
     setIsModalOpen((prev) => !prev);
+    setProduct({
+      id: uid,
+      image: "",
+      name: "",
+      description: "",
+      price: "",
+    });
   };
 
   const updateModalHandler = () => {
@@ -88,6 +105,7 @@ function ProductsTable() {
   };
 
   const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const selectedFile = e.target.files?.[0];
     const { name } = e.target;
     if (selectedFile) {
@@ -111,76 +129,38 @@ function ProductsTable() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addData(Stores.Products, product);
-    setIsProductAdded(true);
-    // fetchData()
+    dispatch(addProduct(product));
+    setIsModalOpen(false);
   };
 
-  const handleUpdateExistingProduct = () => {
-    updateExistingProduct(Stores.Products, selectedId, updateProduct)
-      .then((data) => {
-        setIsProductAdded(true);
-      })
-      .catch((error) => {
-        console.error("Error updating data:", error);
-      });
+  const handleUpdateExistingProduct = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(updateProducts(updateProduct));
+    setIsUpdateModalOpen(false);
   };
 
   const handleDeleteProduct = (id: string) => {
-    deleteProduct(Stores.Products, id);
-    setIsProductAdded(true);
+    dispatch(deleteProducts(id));
   };
 
   const handleUpdateProduct = (id: string) => {
-    setSelecedId(id);
-    getDataById(Stores.Products, id)
-      .then((data: any) => {
-        if (data) {
-          setUpdateProduct({
-            id: data.id,
-            image: data.image,
-            name: data.name,
-            description: data.description,
-            price: data.price,
-          });
-        } else {
-          console.log("No data found for the given ID.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error retrieving data:", error);
-      });
+    const updatedProduct: Product = allProducts?.find(
+      (item: Product) => item.id === id
+    );
+    setUpdateProduct({
+      id: updatedProduct.id,
+      image: updatedProduct.image,
+      name: updatedProduct.name,
+      description: updatedProduct.description,
+      price: updatedProduct.price,
+    });
     updateModalHandler();
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const products = await getStoreData<Product>(Stores.Products);
-        setAllProducts(products);
-        setProduct({
-          id: uid,
-          image: "",
-          name: "",
-          description: "",
-          price: "",
-        });
-        setIsModalOpen(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [isProductAdded]);
-
-  setTimeout(() => {
-    setIsProductAdded(false);
-  }, 100);
-
   return (
     <div>
-      <div className="w-full mx-auto my-8 p-4 bg-white shadow-md rounded-lg">
-        <div className="mb-4 flex justify-between items-center">
+      <div className="w-full mx-auto p-4 bg-white shadow-md rounded-lg">
+        <div className="mb-6 flex justify-between items-center">
           <div className=" text-left">
             <h2 className="text-xl font-semibold text-blue-gray-700">
               Customize Your Products
@@ -190,17 +170,77 @@ function ProductsTable() {
             </p>
           </div>
           <div className="flex items-center space-x-2">
-            <button className="px-4 py-2 text-sm font-semibold border border-gray rounded-md">
+            <button className="px-4 py-1 text-sm font-semibold border border-gray rounded-md">
               <Link to="/all-products-list">View All Products</Link>
             </button>
             <button
               onClick={openModalhandaler}
-              className="flex items-center px-4 py-2 text-sm font-semibold  bg-green text-white rounded-md"
+              className="px-4 py-1 text-sm font-semibold  bg-green text-white rounded-md flex items-center"
             >
+              <PlusIcon/>
               Add Product
             </button>
           </div>
         </div>
+
+        <div className="mb-4 rounded p-2 border border-light-gray">
+          <div className="flex items-center justify-between gap-5">
+            <div
+              className="bg-[#d1e7dd] p-4  rounded w-[40%] border border-[#a3cfbb] "
+              // style={{
+              //   boxShadow:
+              //     "1px 0px 0px 0px rgba(0, 0, 0, 0.13) inset, -1px 0px 0px 0px rgba(0, 0, 0, 0.13) inset, 0px -1px 0px 0px rgba(0, 0, 0, 0.17) inset, 0px 1px 0px 0px rgba(204, 204, 204, 0.50) inset, 0px 1px 0px 0px rgba(26, 26, 26, 0.07)",
+              // }}
+            >
+              <div className="text-left flex items-center gap-3">
+                {/* <img src={ProductImage} alt="" /> */}
+                <DashboardIcon/>
+
+                <div>
+                <p className="font-medium text-[16px] ">Total Products</p>
+                <p className="font-medium">{allProducts?.length}</p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="bg-[#f8d7da] p-4  rounded w-[40%] border border-[#f1aeb5] "
+              // style={{
+              //   boxShadow:
+              //     "1px 0px 0px 0px rgba(0, 0, 0, 0.13) inset, -1px 0px 0px 0px rgba(0, 0, 0, 0.13) inset, 0px -1px 0px 0px rgba(0, 0, 0, 0.17) inset, 0px 1px 0px 0px rgba(204, 204, 204, 0.50) inset, 0px 1px 0px 0px rgba(26, 26, 26, 0.07)",
+              // }}
+            >
+              <div className="text-left flex items-center gap-3">
+                <CartIcon/>
+                <div>
+                <p className="font-medium text-[16px] ">Total Orders</p>
+                <p className="font-medium">{allProducts?.length}</p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="bg-[#cff4fc] p-4  rounded w-[40%] border border-[#9eeaf9]"
+              style={{
+                boxShadow:
+                  "1px 0px 0px 0px rgba(0, 0, 0, 0.13) inset, -1px 0px 0px 0px rgba(0, 0, 0, 0.13) inset, 0px -1px 0px 0px rgba(0, 0, 0, 0.17) inset, 0px 1px 0px 0px rgba(204, 204, 204, 0.50) inset, 0px 1px 0px 0px rgba(26, 26, 26, 0.07)",
+              }}
+            >
+              <div className="text-left flex items-center gap-3">
+                <UpdateIcon/>
+                <div>
+                <p className="font-medium text-[16px] ">Updated Products</p>
+                <p className="font-medium">{allProducts?.length}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <DahsobardChart/>
+        </div>
+
         {/* <img src={blobUrl} alt="Uploaded Preview" /> */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4 ">
@@ -244,10 +284,10 @@ function ProductsTable() {
           <p className="text-sm text-gray-500">Page 1 of 1</p>
           <div className="flex space-x-2">
             <button className="px-3 py-1 text-sm border rounded-md text-gray-600">
-              Previous
+              <ArrowLeft/>
             </button>
             <button className="px-3 py-1 text-sm border rounded-md text-gray-600">
-              Next
+              <ArrowRight/>
             </button>
           </div>
         </div>

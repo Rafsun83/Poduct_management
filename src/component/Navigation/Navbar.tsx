@@ -4,7 +4,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 const Index = () => {
   const location = useLocation();
   const navigate = useNavigate()
-  console.log("Loacttion---", location.pathname)
+
 
   useEffect(() => {
 
@@ -15,12 +15,12 @@ const Index = () => {
   }, [location.pathname, navigate])
 
   return (
-    <>
-      <nav>
+    <div >
+      <nav className=" fixed w-[100%] z-20">
         <ul
           className={clsx(
-            "flex  gap-5 p-6 text-balck",
-            location.pathname !== "/admin" ? "bg-[#c530c5]" : "bg-deepGreen"
+            "flex  gap-5 px-6 py-3 text-balck",
+            location.pathname !== "/admin" ? "bg-[#cff4fc]" : "bg-deepGreen"
           )}
         >
           <div className="w-[100%]">
@@ -29,26 +29,32 @@ const Index = () => {
                 <div className="flex items-center gap-5">
                   <div className=" cursor-pointer">
                     <Link to="/all-products-list">
-                      <h4 className="text-white text-left border p-2 rounded">
+                      <h4 className="text-[#055160] text-left border p-2 rounded">
                         Product Shop
                       </h4>
                     </Link>
                   </div>
                   <div className="flex items-center gap-2">
-                    <li className="cursor-pointer text-white ">
+                    <li className={
+                      clsx('cursor-pointer text-[#055160]',  'hover:bg-aquamarine px-2 rounded' )
+                    }>
                       <Link to="/all-products-list">Home</Link>
                     </li>
-                    <li className="cursor-pointer text-white ">
+                    <li className={
+                      clsx('cursor-pointer text-[#055160]','hover:bg-aquamarine px-2 rounded' )
+                    }>
                       <Link to="/about">About</Link>
                     </li>
-                    <li className="cursor-pointer text-white ">
+                    <li className={
+                      clsx('cursor-pointer text-[#055160]', 'hover:bg-aquamarine px-2 rounded')
+                    }>
                       <Link to="/contact">Contact</Link>
                     </li>
                   </div>
                 </div>
                 <div className="flex items-center justify-end gap-3">
                   <div>
-                    <li className="cursor-pointer text-white ">
+                    <li className="cursor-pointer text-[#055160] border-b-[1px] ">
                       <Link to="/admin">Admin Panel</Link>
                     </li>
                   </div>
@@ -78,10 +84,10 @@ const Index = () => {
                 <li className='cursor-pointer bg-warning px-3 py-1 rounded-sm'><Link to="/form">Form</Link></li> */}
         </ul>
       </nav>
-      <div>
+      <div className="bg-[#f4f4f4] pt-[60px] min-h-[100vh] ">
         <Outlet />
       </div>
-    </>
+    </div>
   );
 };
 
