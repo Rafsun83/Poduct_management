@@ -36,7 +36,7 @@ const AllProductsList = () => {
   return (
     <div className="grid grid-cols-5 gap-4 h-full">
       <div className="col-span-1 bg-gray-200 p-4">
-        <div className="bg-white p-5 text-left rounded h-full">
+        <div className="bg-white p-5 text-left rounded max-h-full min-h-[100vh]">
           <p className="text-[18px] font-semibold">Filters</p>
           <p className="text-[14px] font-semibold py-3">Catagory</p>
           <div>
@@ -54,7 +54,7 @@ const AllProductsList = () => {
         <div className="">
           {/* h-[90vh] bg-white */}
           <div className="p-3">
-            <div className="flex items-center justify-between py-4">
+            <div className="flex items-center justify-between py-4 border-b border-b-light-gray ">
               <h4>
                 All Products{" "}
                 <span className="text-[16px] font-normal ">
@@ -78,7 +78,7 @@ const AllProductsList = () => {
             </div>
             <div
               className={clsx(
-                "flex items-center gap-5 flex-wrap",
+                "flex items-center gap-5 flex-wrap mt-5",
                 !allProducts?.length
                   ? "items-center justify-center h-[80vh]"
                   : ""
